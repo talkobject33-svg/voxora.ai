@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b1020">
+<title>Voxora AI — Video Voice Studio</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2e;--panel2:#0e1628;--line:#26334f;--text:#eef3ff;--muted:#9ba9c7;--accent:#8b5cf6;--accent2:#22d3ee;--good:#34d399}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top right,#17234a 0,transparent 42%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif}
+.wrap{max-width:1100px;margin:auto;padding:22px 16px 48px}.top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));font-weight:900;color:white;font-size:22px}.brand h1{font-size:21px;margin:0}.brand p{font-size:12px;color:var(--muted);margin:3px 0 0}.badge{border:1px solid #31514f;color:#8ff0cf;background:#12302d;border-radius:999px;padding:7px 11px;font-size:12px}
+.hero{margin-bottom:22px}.hero h2{font-size:clamp(25px,5vw,38px);line-height:1.2;margin:0 0 10px}.gradient{background:linear-gradient(90deg,#a78bfa,#67e8f9);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{margin:0;color:var(--muted);max-width:680px;line-height:1.65}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.card{background:rgba(18,26,46,.94);border:1px solid var(--line);border-radius:20px;padding:18px;min-width:0}.card h3{font-size:17px;margin:0 0 15px}.label{display:block;font-size:13px;color:#c4cee4;margin:14px 0 7px}input[type=text],textarea,select{width:100%;background:var(--panel2);border:1px solid #33415f;color:var(--text);border-radius:12px;padding:12px;font:inherit;font-size:14px;outline:none}textarea{resize:vertical;min-height:104px;line-height:1.55}input:focus,textarea:focus,select:focus{border-color:var(--accent2)}select option{background:#10182a}.upload{border:1.5px dashed #53658d;border-radius:15px;padding:22px 12px;text-align:center;background:#0e172a;cursor:pointer}.upload strong{display:block;margin:8px 0 4px}.upload small{color:var(--muted);line-height:1.5}.upload input{max-width:100%;margin-top:12px;color:var(--muted);font-size:12px}.preview{display:none;width:100%;max-height:280px;margin-top:12px;border-radius:12px;background:#05070c}.hint{color:var(--muted);font-size:12px;line-height:1.55;margin-top:9px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btns{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}.btn{border:0;border-radius:12px;padding:11px 15px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;min-height:44px}.primary{background:linear-gradient(100deg,var(--accent),#6366f1);color:white;flex:1}.secondary{background:#202c46;border:1px solid #3a4a6b;color:var(--text)}.cyan{background:#10313d;border:1px solid #1d6576;color:#9ceeff}.btn:disabled{opacity:.5;cursor:not-allowed}.output{min-height:190px;white-space:pre-wrap}.status{font-size:12px;color:var(--good);min-height:18px;margin-top:8px}.foot{color:var(--muted);font-size:12px;line-height:1.65;margin-top:16px}.notice{border:1px solid #5c4b25;background:#282315;color:#f4d58b;border-radius:13px;padding:12px 14px;font-size:12px;line-height:1.6;margin-top:16px}.pill{display:inline-block;border-radius:8px;padding:4px 8px;background:#202c46;color:#bdc8e1;font-size:11px;margin:0 5px 5px 0}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.wrap{padding:16px 12px 32px}.card{padding:15px}.badge{font-size:10px}.top{align-items:flex-start}.row{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <div class="brand"><div class="logo">V</div><div><h1>Voxora AI</h1><p>Video Voice Studio</p></div></div>
+    <span class="badge">✦ Creator Studio</span>
+  </header>
+  <section class="hero">
+    <h2>ভিডিও থেকে <span class="gradient">Voice Script</span></h2>
+    <p>ভিডিও যোগ করুন, কী ঘটছে তা সংক্ষেপে লিখুন, ভাষা ও স্টাইল বেছে নিন—তারপর স্ক্রিপ্ট তৈরি করে শুনুন।</p>
+    <div style="margin-top:12px"><span class="pill">বাংলা</span><span class="pill">English</span><span class="pill">हिन्दी</span><span class="pill">Text-to-Speech</span></div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h3>① ভিডিও যোগ করুন</h3>
+      <label class="upload" for="videoFile">
+        <div style="font-size:28px">⬆️</div><strong>ভিডিও নির্বাচন করুন</strong>
+        <small>MP4, WebM বা MOV · ভিডিওটি আপনার ব্রাউজারেই প্রিভিউ হবে</small>
+        <input id="videoFile" type="file" accept="video/*" aria-label="ভিডিও নির্বাচন করুন">
+      </label>
+      <video id="preview" class="preview" controls playsinline></video>
+      <div id="fileInfo" class="hint">এখনও কোনো ভিডিও নির্বাচন করা হয়নি।</div>
+
+      <label class="label" for="description">ভিডিওতে কী ঘটছে? (এটি লিখলে স্ক্রিপ্ট আরও ভালো হবে)</label>
+      <textarea id="description" placeholder="যেমন: Free Fire গেমপ্লে, শেষে একটি হেডশট হয়; ভিডিওটি ৩০ সেকেন্ডের..."></textarea>
+      <div class="row">
+        <div><label class="label" for="language">স্ক্রিপ্টের ভাষা</label><select id="language"><option value="bn">বাংলা</option><option value="en">English</option><option value="hi">हिन्दी</option></select></div>
+        <div><label class="label" for="style">ভিডিওর ধরন</label><select id="style"><option value="shorts">Shorts / TikTok</option><option value="gaming">Gaming</option><option value="story">Storytelling</option><option value="promo">Promotional</option><option value="review">Website / Product Review</option><option value="info">Informative</option></select></div>
+      </div>
+      <label class="label" for="tone">ভয়েসের বলার ধরন</label>
+      <select id="tone"><option value="energetic">উৎসাহী ও এনার্জেটিক</option><option value="natural">স্বাভাবিক</option><option value="dramatic">নাটকীয়</option><option value="calm">শান্ত ও স্পষ্ট</option></select>
+      <div class="btns"><button class="btn primary" id="generate">✦ স্ক্রিপ্ট তৈরি করুন</button></div>
+      <p class="hint">নোট: এই প্রাথমিক সংস্করণে AI-কে ভিডিও বিশ্লেষণ করানোর API যুক্ত নেই। ভিডিওর বর্ণনা লিখে স্ক্রিপ্ট তৈরি করা যাবে।</p>
+    </div>
+
+    <div class="card">
+      <h3>② আপনার Voice Script</h3>
+      <label class="label" for="script">তৈরি হওয়া স্ক্রিপ্ট (এডিট করতে পারবেন)</label>
+      <textarea id="script" class="output" placeholder="আপনার স্ক্রিপ্ট এখানে দেখা যাবে..."></textarea>
+      <div class="btns">
+        <button class="btn secondary" id="copy">স্ক্রিপ্ট কপি</button>
+        <button class="btn secondary" id="downloadText">.TXT ডাউনলোড</button>
+      </div>
+      <hr style="border:0;border-top:1px solid var(--line);margin:20px 0">
+      <h3>③ AI Voice Preview</h3>
+      <div class="row">
+        <div><label class="label" for="voice">কণ্ঠস্বর</label><select id="voice"><option value="female">নারী কণ্ঠ (উপলভ্য থাকলে)</option><option value="male">পুরুষ কণ্ঠ (উপলভ্য থাকলে)</option><option value="any">যেকোনো উপলভ্য কণ্ঠ</option></select></div>
+        <div><label class="label" for="rate">কথার গতি</label><select id="rate"><option value="0.85">ধীর</option><option value="1" selected>স্বাভাবিক</option><option value="1.15">দ্রুত</option></select></div>
+      </div>
+      <div class="btns">
+        <button class="btn cyan" id="speak">▶ শুনুন</button>
+        <button class="btn secondary" id="stop">■ বন্ধ করুন</button>
+      </div>
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+      <p class="hint">এই বাটনটি আপনার ডিভাইস/ব্রাউজারের built-in speech voice ব্যবহার করে। সব ভাষা বা কণ্ঠ সব ডিভাইসে নাও থাকতে পারে; এটি ডাউনলোডযোগ্য AI অডিও তৈরি করে না।</p>
+    </div>
+  </section>
+  <div class="notice"><strong>গুরুত্বপূর্ণ:</strong> এটি Voxora AI-এর ফ্রন্টএন্ড প্রোটোটাইপ। সত্যিকারের ভিডিও-দৃশ্য বিশ্লেষণ, উন্নত বহু-ভাষার AI স্ক্রিপ্ট এবং MP3/WAV অডিও ডাউনলোড চালু করতে নিরাপদ ব্যাকএন্ড ও AI/Voice API যুক্ত করতে হবে। API key কখনো এই HTML ফাইলে প্রকাশ করবেন না।</div>
+  <p class="foot">Voxora AI · প্রোটোটাইপ · ভিডিও ফাইল সার্ভারে আপলোড হয় না; প্রিভিউ আপনার ব্রাউজারে চলে।</p>
+</main>
+<script>
+(function(){
+ const fileInput=document.getElementById('videoFile');
+ const preview=document.getElementById('preview');
+ const fileInfo=document.getElementById('fileInfo');
+ const desc=document.getElementById('description');
+ const scriptBox=document.getElementById('script');
+ const status=document.getElementById('status');
+ let objectUrl=null;
+ fileInput.addEventListener('change',()=>{
+   const file=fileInput.files&&fileInput.files[0];
+   if(objectUrl){URL.revokeObjectURL(objectUrl);objectUrl=null;}
+   if(!file){preview.style.display='none';fileInfo.textContent='এখনও কোনো ভিডিও নির্বাচন করা হয়নি।';return;}
+   if(!file.type.startsWith('video/')){fileInfo.textContent='দয়া করে একটি ভিডিও ফাইল নির্বাচন করুন।';fileInput.value='';return;}
+   objectUrl=URL.createObjectURL(file);preview.src=objectUrl;preview.style.display='block';
+   fileInfo.textContent='নির্বাচিত: '+file.name+' · '+(file.size/1024/1024).toFixed(1)+' MB';
+ });
+ const templates={
+  bn:{
+   shorts:d=>'বন্ধুরা, '+(d||'আজকের এই ভিডিওতে রয়েছে দারুণ কিছু মুহূর্ত')+'! শেষ পর্যন্ত দেখুন, কারণ সবচেয়ে মজার অংশটি আসছে সামনে। ভিডিওটি ভালো লাগলে লাইক দিন এবং এমন আরও ভিডিওর জন্য ফলো করতে ভুলবেন না!',
+   gaming:d=>'গেমিংপ্রেমীরা, তৈরি তো? '+(d||'আজকের গেমপ্লেতে রয়েছে দুর্দান্ত অ্যাকশন ও চমক')+'। শেষ পর্যন্ত দেখুন—পরের মুহূর্তে কী হবে, তা মিস করতে চাইবেন না! ভালো লাগলে লাইক ও ফলো করুন।',
+   story:d=>'কখনও কখনও একটি ছোট মুহূর্তও পুরো গল্প বদলে দিতে পারে। '+(d||'এই ভিডিওতে রয়েছে একটি মজার ও আকর্ষণীয় ঘটনা')+'। শেষ পর্যন্ত সঙ্গে থাকুন, আর আপনার মতামত কমেন্টে জানান।',
+   promo:d=>'আপনার জন্য নিয়ে এসেছি '+(d||'একটি দারুণ নতুন অভিজ্ঞতা')+'! এর বিশেষ দিকগুলো জানতে ভিডিওটি শেষ পর্যন্ত দেখুন। আরও জানতে আমাদের সঙ্গে থাকুন।',
+   review:d=>'আজ আমরা দেখে নেব '+(d||'এই ওয়েবসাইট বা পণ্যটির গুরুত্বপূর্ণ ফিচারগুলো')+'। ব্যবহার, সুবিধা এবং কোন বিষয়গুলো খেয়াল রাখা দরকার—সবকিছু সংক্ষেপে জানব। আপনার অভিজ্ঞতা কমেন্টে লিখুন।',
+   info:d=>'আজকের ভিডিওতে সহজভাবে জানব '+(d||'একটি গুরুত্বপূর্ণ বিষয় সম্পর্কে')+'। মূল তথ্যগুলো মনোযোগ দিয়ে দেখুন এবং তথ্যটি কাজে লাগলে অন্যদের সঙ্গেও শেয়ার করুন।'
+  },
+  en:{
+   shorts:d=>'Hey everyone! '+(d||'This video has some really interesting moments')+'. Stay until the end for the best part. If you enjoy it, hit like and follow for more!',
+   gaming:d=>'What’s up, gamers! '+(d||'Today’s gameplay is packed with action and surprises')+'. Keep watching to see what happens next, and follow for more gaming content!',
+   story:d=>'Sometimes one small moment can change the whole story. '+(d||'This video captures an interesting moment')+'. Watch until the end and tell us what you think in the comments.',
+   promo:d=>'Here’s a look at '+(d||'something worth checking out')+'. Watch to discover the key highlights, and stay tuned for more details.',
+   review:d=>'Today we’re taking a closer look at '+(d||'this website or product')+'. We’ll cover its key features and what you should know. Share your experience in the comments.',
+   info:d=>'In this video, we’ll explain '+(d||'an important topic')+' in a simple way. Watch for the key points, and share this with someone who might find it useful.'
+  },
+  hi:{
+   shorts:d=>'दोस्तों, '+(d||'इस वीडियो में कुछ मज़ेदार पल हैं')+'! आख़िर तक देखिए, क्योंकि सबसे अच्छा हिस्सा आगे है। वीडियो पसंद आए तो लाइक करें और ऐसी ही वीडियो के लिए फॉलो करें!',
+   gaming:d=>'गेमिंग दोस्तों, तैयार हैं? '+(d||'आज के गेमप्ले में शानदार एक्शन और सरप्राइज़ हैं')+'। आगे क्या होता है, यह देखने के लिए अंत तक बने रहें!',
+   story:d=>'कभी-कभी एक छोटा सा पल पूरी कहानी बदल देता है। '+(d||'इस वीडियो में एक दिलचस्प घटना दिखाई गई है')+'। अंत तक देखिए और अपनी राय कमेंट में बताइए।',
+   promo:d=>'आपके लिए पेश है '+(d||'एक शानदार नया अनुभव')+'! इसकी खास बातें जानने के लिए वीडियो अंत तक देखें।',
+   review:d=>'आज हम देखेंगे '+(d||'इस वेबसाइट या प्रोडक्ट की खास खूबियाँ')+'। मुख्य फीचर्स जानिए और अपना अनुभव कमेंट में बताइए।',
+   info:d=>'आज के वीडियो में हम आसान भाषा में समझेंगे '+(d||'एक महत्वपूर्ण विषय')+'। ज़रूरी जानकारी के लिए अंत तक देखें और उपयोगी लगे तो शेयर करें।'
+  }
+ };
+ document.getElementById('generate').addEventListener('click',()=>{
+   const lang=document.getElementById('language').value;
+   const style=document.getElementById('style').value;
+   const d=desc.value.trim();
+   scriptBox.value=templates[lang][style](d);
+   status.textContent='স্ক্রিপ্ট তৈরি হয়েছে। প্রয়োজনে সম্পাদনা করে নিন।';
+ });
+ document.getElementById('copy').addEventListener('click',async()=>{
+   if(!scriptBox.value.trim()){status.textContent='আগে একটি স্ক্রিপ্ট তৈরি করুন।';return;}
+   try{await navigator.clipboard.writeText(scriptBox.value);status.textContent='স্ক্রিপ্ট কপি হয়েছে।';}
+   catch(e){scriptBox.focus();scriptBox.select();status.textContent='টেক্সট সিলেক্ট হয়েছে—কপি করতে Copy চাপুন।';}
+ });
+ document.getElementById('downloadText').addEventListener('click',()=>{
+   if(!scriptBox.value.trim()){status.textContent='ডাউনলোডের আগে স্ক্রিপ্ট তৈরি করুন।';return;}
+   const blob=new Blob([scriptBox.value],{type:'text/plain;charset=utf-8'});
+   const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='voxora-voice-script.txt';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);status.textContent='স্ক্রিপ্ট ডাউনলোড শুরু হয়েছে।';
+ });
+ document.getElementById('speak').addEventListener('click',()=>{
+   if(!('speechSynthesis' in window)){status.textContent='এই ব্রাউজারে Text-to-Speech সমর্থিত নয়।';return;}
+   const text=scriptBox.value.trim();if(!text){status.textContent='আগে স্ক্রিপ্ট তৈরি করুন।';return;}
+   speechSynthesis.cancel();
+   const utter=new SpeechSynthesisUtterance(text);
+   const lang=document.getElementById('language').value;
+   utter.lang=lang==='bn'?'bn-BD':lang==='hi'?'hi-IN':'en-US';
+   utter.rate=Number(document.getElementById('rate').value);
+   const voices=speechSynthesis.getVoices();
+   const preference=document.getElementById('voice').value;
+   const langPrefix=lang==='bn'?'bn':lang==='hi'?'hi':'en';
+   let candidates=voices.filter(v=>v.lang.toLowerCase().startsWith(langPrefix));
+   if(!candidates.length)candidates=voices.filter(v=>v.lang.toLowerCase().startsWith(lang==='bn'?'en':langPrefix));
+   if(preference!=='any'&&candidates.length){
+     const match=candidates.find(v=>preference==='female'?/female|woman|zira|samantha|aria|google.*female/i.test(v.name):/male|man|david|mark|daniel/i.test(v.name));
+     if(match)utter.voice=match;else utter.voice=candidates[0];
+   }else if(candidates.length)utter.voice=candidates[0];
+   utter.onstart=()=>status.textContent='ভয়েস প্রিভিউ চলছে…';
+   utter.onend=()=>status.textContent='ভয়েস প্রিভিউ শেষ।';
+   utter.onerror=()=>status.textContent='ভয়েস চালানো যায়নি। অন্য ব্রাউজার বা কণ্ঠ চেষ্টা করুন।';
+   speechSynthesis.speak(utter);
+ });
+ document.getElementById('stop').addEventListener('click',()=>{if('speechSynthesis'in window)speechSynthesis.cancel();status.textContent='ভয়েস বন্ধ করা হয়েছে।';});
+ window.addEventListener('beforeunload',()=>{if(objectUrl)URL.revokeObjectURL(objectUrl);});
+})();
+</script>
+</body>
+</html>
