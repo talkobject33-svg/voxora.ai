@@ -93,7 +93,7 @@
  });
  const templates={
   bn:{
-   shorts:d=>'বন্ধুরা, '+(d||'আজকের এই ভিডিওতে রয়েছে দারুণ কিছু মুহূর্ত')+'! শেষ পর্যন্ত দেখুন, কারণ সবচেয়ে মজার অংশটি আসছে সামনে। ভিডিওটি ভালো লাগলে লাইক দিন এবং এমন আরও ভিডিওর জন্য ফলো করতে ভুলবেন না!',
+   :d=>'বন্ধুরা, '+(d||'আজকের এই ভিডিওতে রয়েছে দারুণ কিছু মুহূর্ত')+'! শেষ পর্যন্ত দেখুন, কারণ সবচেয়ে মজার অংশটি আসছে সামনে। ভিডিওটি ভালো লাগলে লাইক দিন এবং এমন আরও ভিডিওর জন্য ফলো করতে ভুলবেন না!',
    gaming:d=>'গেমিংপ্রেমীরা, তৈরি তো? '+(d||'আজকের গেমপ্লেতে রয়েছে দুর্দান্ত অ্যাকশন ও চমক')+'। শেষ পর্যন্ত দেখুন—পরের মুহূর্তে কী হবে, তা মিস করতে চাইবেন না! ভালো লাগলে লাইক ও ফলো করুন।',
    story:d=>'কখনও কখনও একটি ছোট মুহূর্তও পুরো গল্প বদলে দিতে পারে। '+(d||'এই ভিডিওতে রয়েছে একটি মজার ও আকর্ষণীয় ঘটনা')+'। শেষ পর্যন্ত সঙ্গে থাকুন, আর আপনার মতামত কমেন্টে জানান।',
    promo:d=>'আপনার জন্য নিয়ে এসেছি '+(d||'একটি দারুণ নতুন অভিজ্ঞতা')+'! এর বিশেষ দিকগুলো জানতে ভিডিওটি শেষ পর্যন্ত দেখুন। আরও জানতে আমাদের সঙ্গে থাকুন।',
@@ -117,13 +117,69 @@
    info:d=>'आज के वीडियो में हम आसान भाषा में समझेंगे '+(d||'एक महत्वपूर्ण विषय')+'। ज़रूरी जानकारी के लिए अंत तक देखें और उपयोगी लगे तो शेयर करें।'
   }
  };
- document.getElementById('generate').addEventListener('click',()=>{
-   const lang=document.getElementById('language').value;
-   const style=document.getElementById('style').value;
-   const d=desc.value.trim();
-   scriptBox.value=templates[lang][style](d);
-   status.textContent='স্ক্রিপ্ট তৈরি হয়েছে। প্রয়োজনে সম্পাদনা করে নিন।';
- });
+document.getElementById('generate').addEventListener('click', async () => {
+  const file = fileInput.files && fileInput.files[0];
+
+  if (!file) {
+    status.textContent = 'প্রথমে একটি ভিডিও নির্বাচন করুন।';
+    return;
+  }
+
+  if (!file.type.startsWith('video/')) {
+    status.textContent = 'একটি বৈধ ভিডিও ফাইল নির্বাচন করুন।';
+    return;
+  }
+
+  if (file.size > 12 * 1024 * 1024) {
+    status.textContent = 'সর্বোচ্চ 12 MB ভিডিও ব্যবহার করুন।';
+    return;
+  }
+
+  const button = document.getElementById('generate');
+  const language = document.getElementById('language').value;
+  const selectedStyle = document.getElementById('style').value;
+
+  const styleMap = {
+    shorts: 'shorts',
+    gaming: 'gaming',
+    story: 'storytelling',
+    promo: 'promotional',
+    review: 'review',
+    info: 'informative'
+  };
+
+  const formData = new FormData();
+  formData.append('video', file);
+  formData.append('language', language);
+  formData.append('style', styleMap[selectedStyle] || 'shorts');
+
+  button.disabled = true;
+  status.textContent = 'ভিডিও AI-তে পাঠানো হচ্ছে। অপেক্ষা করুন...';
+
+  try {
+    const response = await fetch('/api/analyze', {
+      method: 'POST',
+      body: formData
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.error || 'AI স্ক্রিপ্ট তৈরি করতে পারেনি।');
+    }
+
+    if (!result.script || !result.script.trim()) {
+      throw new Error('AI কোনো স্ক্রিপ্ট ফেরত দেয়নি।');
+    }
+
+    scriptBox.value = result.script.trim();
+    status.textContent = 'সফল! AI ভিডিও বিশ্লেষণ করে স্ক্রিপ্ট তৈরি করেছে।';
+  } catch (error) {
+    status.textContent = 'সমস্যা: ' + error.message;
+  } finally {
+    button.disabled = false;
+  }
+});
  document.getElementById('copy').addEventListener('click',async()=>{
    if(!scriptBox.value.trim()){status.textContent='আগে একটি স্ক্রিপ্ট তৈরি করুন।';return;}
    try{await navigator.clipboard.writeText(scriptBox.value);status.textContent='স্ক্রিপ্ট কপি হয়েছে।';}
